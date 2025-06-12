@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Fiesta Mexicana Quiz</title>
+  <link href="https://fonts.googleapis.com/css2?family=Chewy&display=swap" rel="stylesheet">
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Chewy', cursive;
+      background: linear-gradient(45deg, #FFD700, #FF6347);
+      color: #fff;
+      text-align: center;
+    }
+    .question {
+      font-size: 2rem;
+      margin: 2rem;
+    }
+    .answers button {
+      background: #32CD32;
+      color: white;
+      border: none;
+      padding: 1rem;
+      margin: 1rem;
+      font-size: 1.5rem;
+      border-radius: 1rem;
+      cursor: pointer;
+    }
+    .timer {
+      font-size: 2rem;
+      margin-top: 1rem;
+    }
+    .round-banner {
+      font-size: 2.5rem;
+      margin-top: 2rem;
+      animation: pop 0.8s ease-out;
+    }
+    @keyframes pop {
+      0% { transform: scale(0.5); opacity: 0; }
+      100% { transform: scale(1); opacity: 1; }
+    }
+  </style>
+</head>
+<body>
+  <div class="round-banner" id="roundBanner">Welkom bij de Fiesta Mexicana Quiz!</div>
+  <div class="question" id="question">Vraag komt hier...</div>
+  <div class="answers" id="answers"></div>
+  <div class="timer" id="timer">🕒 15</div>
+  <audio id="roundMusic" loop src="assets/mexican-music.mp3"></audio>
+  <audio id="correctSound" src="assets/correct.mp3"></audio>
+  <audio id="wrongSound" src="assets/wrong.mp3"></audio>
+
+  <script>
+    let questions = [];
+    let current = 0;
+    let score = 0;
+    let timerInterval;
+    const questionEl = document.getElementById('question');
+    const answersEl = document.getElementById('answers');
+    const timerEl = document.getElementById('timer');
+    const roundMusic = document.getElementById('roundMusic');
+    const correctSound = document.getElementById('correctSound');
+    const wrongSound = document.getElementById('wrongSound');
+
+    fetch('data/questions.json')
+      .then(res => res.json())
+      .then(data => {
+        questions = data;
+        showQuestion();
+      });
+
+    function showQuestion() {
+      if (current >= questions.length) {
+        questionEl.innerText = "Quiz afgelopen! Jouw score: " + score;
+        answersEl.innerHTML = '';
+        timerEl.innerHTML = '';
+        return;
+      }
+      const q = questions[current];
+      questionEl.innerText = q.question;
+      answersEl.innerHTML = '';
+      q.answers.forEach((ans, i) => {
+        const btn = document.createElement('button');
+        btn.innerText = ans;
+        btn.onclick = () => checkAnswer(i);
+        answersEl.appendChild(btn);
+      });
+      startTimer();
+    }
+
+    function checkAnswer(index) {
+      clearInterval(timerInterval);
+      const q = questions[current];
+      if (index === q.correct) {
+        score++;
+        correctSound.play();
+      } else {
+        wrongSound.play();
+      }
+      current++;
+      setTimeout(showQuestion, 2000);
+    }
+
+    function startTimer() {
+      let time = 15;
+      timerEl.innerText = `🕒 ${time}`;
+      timerInterval = setInterval(() => {
+        time--;
+        timerEl.innerText = `🕒 ${time}`;
+        if (time <= 0) {
+          clearInterval(timerInterval);
+          current++;
+          showQuestion();
+        }
+      }, 1000);
+    }
+
+    roundMusic.play();
+  </script>
+</body>
+</html>
