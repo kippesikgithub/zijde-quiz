@@ -1,0 +1,33 @@
+[
+  {
+    "question": "Wie is de burgemeester van Leidschendam?",
+    "answers": [
+      "Marijn Damstra",
+      "Martijn Vroom",
+      "Klaas Tigelaar",
+      "Michiel van Haersma Buma"
+    ],
+    "correct": 1
+  },
+  {
+    "question": "Wat is de gemiddelde vraagprijs per m2 in De Zijde?",
+    "answers": [
+      "\u20ac2.500",
+      "\u20ac3.500",
+      "\u20ac4.000",
+      "\u20ac4.500"
+    ],
+    "correct": 2
+  },
+  {
+    "question": "Wat is de kleinste leeftijdsgroep in De Zijde?",
+    "answers": [
+      "0-15",
+      "16-25",
+      "26-45",
+      "46-65",
+      "65+"
+    ],
+    "correct": 1
+  }
+]
